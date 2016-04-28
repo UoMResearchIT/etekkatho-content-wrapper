@@ -56,6 +56,16 @@ class BCWrap():
 									</video>""".format(file = file)
 						break
 				
+				# Add some content
+				html += """<h2>Page title</h2>
+							<p>
+								Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus fringilla metus vel leo convallis volutpat. Nullam ornare, quam id lobortis efficitur, risus quam auctor risus, id interdum ligula justo at elit. Etiam pharetra nulla et hendrerit semper. Mauris nec sapien lacinia, sollicitudin ante nec, lacinia quam. 
+							</p>
+							"""
+				
+				# Add the nav links
+				html += self.buildNavigation()
+				
 				# Add the HTML footer
 				html += self.getFooter()
 				
@@ -116,14 +126,28 @@ class BCWrap():
 						"""
 		
 		return header
+	
+	def buildNavigation(self):
+		# Build a navigation tree from the file structure
+		navHTML = '<div id="footer-nav">'
+		rootdir = '../content/'
+		
+		for subdir, dirs, files in os.walk(rootdir):
+			if "css" not in subdir and "img" not in subdir and len(subdir) > 11: 
+				subdirname = subdir.replace('_', ': ')
+			
+				navHTML += """
+				<div class="nav-item">
+					&raquo; <a href="../{subdir}/index.html">{subdirname}</a>				
+				</div>
+				""".format(relpath = os.path.relpath(subdir), subdir = subdir.replace("../content/", ""), subdirname = subdirname.replace("../content/", ""))
+		
+		navHTML += '</div>'
+		
+		return navHTML
 		
 	def getFooter(self):
-		footer = """<h2>Page title</h2>
-						<p>
-							Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus fringilla metus vel leo convallis volutpat. Nullam ornare, quam id lobortis efficitur, risus quam auctor risus, id interdum ligula justo at elit. Etiam pharetra nulla et hendrerit semper. Mauris nec sapien lacinia, sollicitudin ante nec, lacinia quam. 
-						</p>
-					</div>
-					
+		footer = """</div>
 					<div class="footer">
 					  <div class="container">
 						<p>eTekkatho is hosted and run by The University of Manchester<span class="visuallyhidden">.</span></p>
